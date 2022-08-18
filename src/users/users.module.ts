@@ -23,15 +23,25 @@ export class users extends tabModule {
   }
 
   async create(el, user?) {
-    const parents = [];
+    // console.log(JSON.stringify(el))
+    const parents = [], pushParents = [];
     for (let i in el.parents) {
-      const pid = el.parents[i].split(".")[0];
-      const pel = await this.get(pid);
+      const { id } = this.tab.parsePlaceString(el.parents[i]);
+      const pel = await this.get(id);
       if (pel)
         parents.push(el.parents[i]);
     }
     el.parents = parents;
-    return this.api.create(el, user);
+    for (let i in el.pushParents) {
+      const pel = await this.tab.get(el.pushParents[i]);
+      if (this.rights(pel, user).write())
+        pushParents.push(el.pushParents[i]);
+    }
+    el.pushParents = pushParents;
+    const newEl = this.assign(await this.api.create(el, user));
+    // if (newEl.created)
+    newEl.created();
+    return newEl;
   }
 
   async authPassword(tel: string, password: string) {
@@ -47,7 +57,15 @@ export class users extends tabModule {
   }
 
   async authMe() {
-    return this.api.authMe();
+    try {
+      const me = await this.api.authMe();
+      return this.tab.assignMe(me);
+    } catch (e) {
+      if (e.status === "NOT_FOUND" || e.statusCode === 401) {
+        await this.tab.clearMe();
+      }
+      return Promise.reject(e);
+    }
   }
 
   async getAuth(id: string) {

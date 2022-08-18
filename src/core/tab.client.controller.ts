@@ -1,5 +1,4 @@
 import * as SparkMD5 from "spark-md5";
-import { reactive } from 'vue'
 
 export class tabClientController {
   public req;
@@ -120,7 +119,7 @@ export class tabClientController {
     const { id, place, key } = this.tab.parsePlaceString(parentString);
     if (!this.childrenList[parentString]) {
       this.watch(this.className + "." + parentString);
-      this.childrenList[parentString] = reactive([]);
+      this.childrenList[parentString] = this.tab.reactive([]);
     }
 
     this.childrenList[parentString].waiting = true;

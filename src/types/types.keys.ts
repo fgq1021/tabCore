@@ -35,7 +35,7 @@ export const keyTypes = [
     aType('File', '文件', ''),
     aType('Directory', '文件夹', ''),
     aType('Image', '图片', ''),
-    aType('MapTile', '地图瓦片', '请选择瓦片文件夹'),
+    // aType('MapTile', '地图瓦片', '请选择瓦片文件夹'),
     // aType('FileBase64', '文件Base64', '文件太大会卡'),
     aType('Video', '视频', ''),
     aType('Live', '直播', '默认为阿里云，可手动调整数据',

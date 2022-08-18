@@ -2,10 +2,13 @@ export class Tab {
   public me = {};
   public token = "";
   public manage = [];
+  public system;
   public users;
   public types;
   public elements;
+  public reactive;
   public config = {
+    _id: "",
     apiUrl: "",
     secret: "",
     port: "1021",
@@ -20,14 +23,26 @@ export class Tab {
       host: "localhost",
       port: 27017,
       db: "TabOS"
+    },
+    users: {
+      root: { _id: "" }
     }
   };
   public moduleList = [];
   public typeModules = {};
 
-  constructor(config?: object) {
+  constructor(config?) {
+    this.start(config);
+  }
+
+  start(config?) {
     console.log("TabOS客户端初始化中");
     if (config) {
+      const reactive = config["reactive"];
+      delete config.reactive;
+      this.reactive = this.reactive || reactive;
+      if (this.reactive)
+        this.config = this.reactive(this.config);
       Object.assign(this.config, config);
     }
     console.log(this);
@@ -37,8 +52,12 @@ export class Tab {
     this.me = this.users.assign(me);
     this.token = me.token;
     this.manage = me.manage;
-    localStorage.setItem(this.config.apiUrl, me.token);
     return this.me;
+  }
+
+  clearMe() {
+    this.me = {};
+    this.token = null;
   }
 
   makeList(list, option) {
@@ -93,11 +112,17 @@ export class Tab {
     if (t.types)
       for (let tid of t.types) {
         this.typeModules[tid] = t;
+        for (let m of this.moduleList) {
+          this[m].importType(tid);
+        }
       }
   }
 
   parseUnit(u: string) {
     const unit = u.toLowerCase(), o = { unit: "", units: "", Units: "", Unit: "" };
+    if (unit === "system") {
+      return { unit: "system", units: "system", Units: "System", Unit: "System" };
+    }
     if (unit.charAt(unit.length - 1) === "s") {
       o.units = unit;
       o.unit = unit.slice(0, unit.length - 1);
@@ -160,6 +185,33 @@ export class Tab {
   assign(el) {
     const { units } = this.parseUnit(el.className);
     return this[units].assign(el);
+  }
+
+  genSecret(passwordLength = 16) {
+    const chars = "0123456789abcdefghijklmnopqrstuvwxyz!@#$%^&*()ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    let password = "";
+    for (let i = 0; i <= passwordLength; i++) {
+      const randomNumber = Math.floor(Math.random() * chars.length);
+      password += chars.substring(randomNumber, randomNumber + 1);
+    }
+    return password;
+  }
+
+  private eventFn = {};
+
+  on(event, fn) {
+    if (!this.eventFn[event])
+      this.eventFn[event] = [];
+    this.eventFn[event].push(fn);
+  }
+
+  async runEventFn(event, msg) {
+    const list = this.eventFn[event];
+    if (list)
+      for (let fn of list) {
+        await fn(msg);
+      }
+    return true;
   }
 }
 

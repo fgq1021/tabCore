@@ -92,7 +92,7 @@ export default class tabServerController {
         this.tab.socket.to(id).emit("update", res);
         delete this.updateTimer[id];
       }, timer);
-    } else {
+    } else if (this.tab.socket) {
       console.log("推送更新：", id);
       this.tab.socket.to(id).emit("update", res);
     }
@@ -351,14 +351,26 @@ export default class tabServerController {
     // console.log(el);
     const rights = this.module.rights(el, user), pushParents = el.pushParents;
     delete el.pushParents;
+    //处理默认值
+    if (el.type) {
+      const type = await this.tab.types.get(el.type, user);
+      el.data = el.data || {};
+      el.title = el.title || type.title;
+      Object.assign(el.data, type.data, el.data);
+    }
+
     const elModel = new this.Model(el);
+    elModel.owner = user._id;
+
     if (rights.isAnonymous) {
       delete elModel.owner;
       elModel.accessControl = {};
       return JSON.parse(JSON.stringify(await elModel.save()));
     }
-    if (!rights.isRoot)
-      elModel.owner = user._id;
+    // if (!rights.isRoot)
+    //   elModel.owner = user._id;
+    // if (rights.isRoot)
+    //   elModel.owner = user._id;
     const newEl = await elModel.save();
 
     for (let idString of newEl.parents) {
@@ -368,7 +380,7 @@ export default class tabServerController {
     if (pushParents)
       for (let i in pushParents) {
         const { slot, place, key } = this.tab.parsePlaceString(pushParents[i]);
-        const pel = await this.tab.get(pushParents[i]);
+        const pel = await this.tab.get(pushParents[i], user);
         await this.module.pushChildren(pel, slot + "." + this.className + "." + newEl._id + "." + place + "." + key, user);
       }
     return JSON.parse(JSON.stringify(newEl));

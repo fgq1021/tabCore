@@ -18,7 +18,7 @@ export class types extends tabModule {
 
             constructor(el) {
                 super(el);
-                this.$init()
+                this.$init();
             }
 
             async getType(user?): Promise<any> {
@@ -36,6 +36,10 @@ export class types extends tabModule {
                         return this.dataStructure[i]
                 }
                 return false
+            }
+
+            getKey(key){
+                return this.getStructure(key)
             }
         };
     }

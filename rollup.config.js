@@ -27,13 +27,24 @@ export default [
   // `file` and `format` for each target)
   {
     input: 'src/index.client.ts',
-    external: ['bowser','spark-md5','socket.io-client','vue'],
+    external: ['bowser', 'spark-md5', 'socket.io-client'],
     plugins: [
       typescript() // so Rollup can convert TypeScript to JavaScript
     ],
     output: [
-      { file: pkg.main, format: 'cjs' },
-      { file: pkg.module, format: 'es' }
+      { file: pkg.main, format: 'es' },
+      // { file: pkg.module, format: 'cjs' }
     ]
-  }
+  },
+  // {
+  //   input: 'src/index.server.ts',
+  //   external: ['ali-oss','sift','vue'],
+  //   plugins: [
+  //     typescript() // so Rollup can convert TypeScript to JavaScript
+  //   ],
+  //   output: [
+  //     { file: pkg.main, format: 'cjs' },
+  //     { file: pkg.module, format: 'es' }
+  //   ]
+  // }
 ]

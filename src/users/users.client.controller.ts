@@ -1,7 +1,6 @@
 import { tabClientController } from "../core/tab.client.controller";
 
 
-
 export class usersClientController extends tabClientController {
   public className = "users";
   public authUrl;
@@ -17,7 +16,11 @@ export class usersClientController extends tabClientController {
   }
 
   async authMe() {
-    return this.tab.assignMe((await this.req.get(this.authUrl, this.apiConfig())).data);
+    try {
+      return (await this.req.get(this.authUrl, this.apiConfig())).data;
+    } catch (e) {
+      return Promise.reject(e.response.data);
+    }
   }
 
   async authPassword(tel: string, password: string): Promise<any> {
