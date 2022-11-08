@@ -439,7 +439,7 @@ export default class tabServerController {
 
   async upload(file, id, place?: string, key?: string, p?, user?) {
     const el = await this.module.get(id), rights = this.module.rights(el, user);
-    // console.log(el, user, rights);
+    console.log(el, user, rights);
     if (rights.write()) {
       const filename = file.originalname,
         index = filename.lastIndexOf("."), suffix = filename.substring(index + 1, filename.length);

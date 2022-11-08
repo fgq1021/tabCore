@@ -1,15 +1,4 @@
-import * as mongoose from "mongoose";
+import {TabUnitModel} from "../core/tab.server.model";
 
-const ObjectId = mongoose.Schema.Types.ObjectId;
+export default TabUnitModel('System')
 
-const SystemSchema = new mongoose.Schema({
-  title: String,
-  parents: [String],
-  children: {},
-  type: { type: ObjectId, ref: "Type" },
-  data: {}
-}, { timestamps: true });
-
-SystemSchema.statics = {};
-
-export default mongoose.model("System", SystemSchema);

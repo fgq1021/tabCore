@@ -1,15 +1,59 @@
 import tabServerController from "../core/tab.server.controller";
 import Model from "./system.server.model";
+import path from "path";
+import fs from "fs/promises";
+import * as SparkMD5 from "spark-md5";
 
-export  class systemServerController extends tabServerController {
-  public className = "system";
-  public Model = Model;
+export class systemServerController extends tabServerController {
+    public className = "system";
+    public Model = Model;
 
-  constructor(config) {
-    super(config);
-  }
+    constructor(config) {
+        super(config);
+    }
 
-  async getConfig(){
+    async getConfig() {
 
-  }
+    }
+
+    async upload(file, id, place?: string, key?: string, p?, user?) {
+        const el = await this.module.get(id), rights = this.module.rights(el, user);
+        console.log(el, user, rights);
+        if (rights.write()) {
+            const filename = file.originalname,
+                index = filename.lastIndexOf("."),
+                suffix = filename.substring(index + 1, filename.length);
+            let md5, storeAs = "/", url;
+            if (index !== 32) {
+                const spark = new SparkMD5.ArrayBuffer();
+                spark.append(file.buffer);
+                md5 = spark.end();
+                storeAs += md5 + "." + suffix;
+            } else {
+                storeAs += filename;
+            }
+            const storePath = path.resolve(this.tab.path.root, `/system/${storeAs}`),
+                data = new Uint8Array(file.buffer);
+            const parentPath = path.dirname(storePath);
+            try {
+                await fs.access(parentPath);
+            } catch (e) {
+                await fs.mkdir(parentPath, {recursive: true});
+            }
+            await fs.writeFile(storePath, data);
+            url = `/system/${storeAs}`;
+
+            if (url) {
+                if (place || key) {
+                    el[place][key] = url;
+                    return el.save(user);
+                }
+                return url;
+            }
+            return Promise.reject({status: "FORBIDDEN", message: "无法存储该文件，请检查服务器设置"});
+        } else return Promise.reject({
+            status: "FORBIDDEN",
+            message: "您没有修改" + this.className + " #" + el._id + " 的权限"
+        });
+    }
 }
