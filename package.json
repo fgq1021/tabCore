@@ -24,6 +24,11 @@
     "build": "tsc",
     "dev": "tsc -w"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fgq1021/tabCore.git"
+  },
+  "license": "MIT",
   "files": [
     "dist"
   ]
