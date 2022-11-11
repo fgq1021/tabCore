@@ -53,12 +53,11 @@ export class system extends tabModule {
         };
     }
 
-
-    async getConfig(user?) {
-        return this.api.getConfig();
+    async getConfig(config = {}, user?) {
+        return this.api.getConfig(config, user);
     }
 
-    getFile(url, user?) {
-        return this.api.getFile(url, user);
+    getFile(user?) {
+        return this.api.getFile(user);
     }
 }

@@ -1,6 +1,6 @@
 import tabServerController from "../core/tab.server.controller";
 import Model from "./system.server.model";
-import path from "path";
+import {join, dirname} from "path";
 import * as fs from "fs/promises";
 import * as SparkMD5 from "spark-md5";
 
@@ -10,10 +10,6 @@ export class systemServerController extends tabServerController {
 
     constructor(config) {
         super(config);
-    }
-
-    async getConfig() {
-
     }
 
     async upload(file, id, place?: string, key?: string, p?, user?) {
@@ -31,9 +27,9 @@ export class systemServerController extends tabServerController {
             } else {
                 storeAs += filename;
             }
-            const storePath = path.join(this.tab.rootPath, `/local${storeAs}`),
+            const storePath = join(this.tab.rootPath, `/local${storeAs}`),
                 data = new Uint8Array(file.buffer);
-            const parentPath = path.dirname(storePath);
+            const parentPath = dirname(storePath);
             try {
                 await fs.access(parentPath);
             } catch (e) {
@@ -57,6 +53,6 @@ export class systemServerController extends tabServerController {
     }
 
     getFile(url) {
-        return fs.readFile(path.join(this.tab.rootPath, url), 'utf-8')
+        return fs.readFile(join(this.tab.rootPath, url), 'utf-8')
     }
 }
