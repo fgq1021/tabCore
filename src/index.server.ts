@@ -32,7 +32,7 @@ export class TabServer extends Tab {
         this.injectModule(system, systemServerController);
         await this.getConfig();
         await this.users.authMe();
-
+        // console.log(this.config)
         await this.runEventFn("start", "启动");
         return true;
     }
@@ -86,7 +86,7 @@ export class TabServer extends Tab {
 
     async makeConfig(id) {
         const config = await this.system.get(id, this.config.users.root);
-        return config.toJson({}, {});
+        return config.toJson({}, this.config.users.root);
     }
 
     async initialization() {

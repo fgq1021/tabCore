@@ -45,7 +45,7 @@ export class Tab {
                 this.config = this.reactive(this.config);
             Object.assign(this.config, config);
         }
-        console.log(this);
+        // console.log(this);
     }
 
     assignMe(me) {

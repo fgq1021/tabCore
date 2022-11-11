@@ -68,11 +68,12 @@ export class usersServerController extends tabServerController {
 
     async authParse(user) {
         const res = this.tab.pureData(user);
-        let subList = await this.Model.find({manager: user._id}, {_id: 1});
-        for (let i = 0; i < subList.length; i++)
-            subList[i] = subList[i]._id;
-        subList.push(user._id);
-        res.manage = subList;
+        let subList = await this.Model.find({manager: user._id}, {_id: 1}), sl=[];
+        for (let i = 0; i < subList.length; i++) {
+            sl[i] = subList[i]._id;
+        }
+        sl.push(user._id);
+        res.manage = sl;
         delete res.passwordHash;
         delete res.password;
         if (res._id === this.users.root._id)
@@ -89,6 +90,7 @@ export class usersServerController extends tabServerController {
 
     async authPassword(tel: string, password: string): Promise<any> {
         const user = await this.Model.findOne({tel});
+        // @ts-ignore
         if (user && await bcrypt.compare(password, user.passwordHash)) {
             return this.authParse(user);
         }
@@ -98,6 +100,7 @@ export class usersServerController extends tabServerController {
     async authMe() {
         if (this.users.root._id) {
             try {
+                // @ts-ignore
                 const me = await this.Model.get({_id: this.users.root._id});
                 return this.tab.pureData(me);
             } catch (e) {

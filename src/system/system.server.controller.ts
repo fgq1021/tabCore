@@ -1,7 +1,7 @@
 import tabServerController from "../core/tab.server.controller";
 import Model from "./system.server.model";
 import path from "path";
-import fs from "fs/promises";
+import * as fs from "fs/promises";
 import * as SparkMD5 from "spark-md5";
 
 export class systemServerController extends tabServerController {
@@ -17,8 +17,7 @@ export class systemServerController extends tabServerController {
     }
 
     async upload(file, id, place?: string, key?: string, p?, user?) {
-        const el = await this.module.get(id), rights = this.module.rights(el, user);
-        console.log(el, user, rights);
+        const el = await this.module.get(id, user), rights = this.module.rights(el, user);
         if (rights.write()) {
             const filename = file.originalname,
                 index = filename.lastIndexOf("."),
@@ -32,7 +31,7 @@ export class systemServerController extends tabServerController {
             } else {
                 storeAs += filename;
             }
-            const storePath = path.resolve(this.tab.path.root, `/system/${storeAs}`),
+            const storePath = path.join(this.tab.rootPath, `/local${storeAs}`),
                 data = new Uint8Array(file.buffer);
             const parentPath = path.dirname(storePath);
             try {
@@ -41,7 +40,7 @@ export class systemServerController extends tabServerController {
                 await fs.mkdir(parentPath, {recursive: true});
             }
             await fs.writeFile(storePath, data);
-            url = `/system/${storeAs}`;
+            url = `/local${storeAs}`;
 
             if (url) {
                 if (place || key) {
@@ -55,5 +54,9 @@ export class systemServerController extends tabServerController {
             status: "FORBIDDEN",
             message: "您没有修改" + this.className + " #" + el._id + " 的权限"
         });
+    }
+
+    getFile(url) {
+        return fs.readFile(path.join(this.tab.rootPath, url), 'utf-8')
     }
 }
