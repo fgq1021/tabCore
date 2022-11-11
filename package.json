@@ -1,6 +1,6 @@
 {
   "name": "tab-client",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "dist/index.client.js",
   "types": "dist/index.client.d.ts",
   "dependencies": {
