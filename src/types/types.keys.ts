@@ -81,4 +81,5 @@ export const keyTypes = [
     aType('RichText', '富文本', '用户通过富文本编辑器创建内容'),
     aType('HTML', '富文本（源码）', '需要用户输入HTML源码'),
     aType('Color', '颜色', '选择一种颜色'),
+    aType('Function', '功能', '直接执行Type文件中的功能'),
 ]

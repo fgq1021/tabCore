@@ -1,0 +1,100 @@
+export declare const defaultTypeModule: {
+    events: {
+        mounted(): void;
+        created(): void;
+        beforeSave(): void;
+        saved(): void;
+        beforeDelete(): void;
+        deleted(): void;
+        childrenSaved(placeString: any): void;
+        childrenPushed(placeString: any, id?: any): void;
+        childrenDeleted(placeString: any, id?: any): void;
+    };
+};
+export declare class tabUnit {
+    className: any;
+    api: any;
+    _id: string;
+    children: {};
+    data: {};
+    parents: [string?];
+    createdAt: Date;
+    updatedAt: Date;
+    type: any;
+    owner: any;
+    isDelete: boolean;
+    constructor(el: any);
+    $init(): Promise<void>;
+    refresh(user?: any): Promise<any>;
+    save(user?: any, option?: any): Promise<any>;
+    upload(file: any, place: any, key: any, p: any): Promise<any>;
+    uploadDirectory(files: any, place: any, key: any, p: any): Promise<any>;
+    delete(): Promise<any>;
+    deleteFrom(placeString?: string, user?: any): Promise<void>;
+    getChildren(placeString?: string, filter?: object, sort?: object, limit?: number, skip?: number, user?: any): any;
+    getChild(placeString?: string, user?: any): any;
+    getType(user?: any): Promise<any>;
+    getOwner(user?: any): Promise<any>;
+    createChild(el: any, placeString?: string, unit?: any, slot?: any, user?: any): Promise<any>;
+    pushChild(el: any, placeString?: string, user?: any): Promise<any>;
+    pushFixChild(el: any, placeString?: string, unit?: any, slot?: string, user?: any): Promise<any>;
+    fixChild(el: any, placeString?: string, slot?: string, user?: any): Promise<this>;
+    unFixChildren(placeString: string, i: any, el?: any, user?: any): any;
+    unFixChild(placeString: string, el: any, user?: any): Promise<any>;
+    pushParent(placeString: any, user?: any): Promise<any>;
+    toJson(els?: {}, user?: any): Promise<any>;
+    mounted(): void;
+}
+export declare class tabModule {
+    className: any;
+    tab: any;
+    private list;
+    private childrenList;
+    unit: any;
+    api: any;
+    constructor(config: any, controller: any);
+    putTab(tab: any): void;
+    init(): void;
+    assign(el: any): any;
+    assignList(list: any): any;
+    get(id: string, user?: any): Promise<any>;
+    refresh(id: any): any;
+    listMy(finder?: object, sort?: object, limit?: number, skip?: number, user?: any): Promise<any>;
+    create(el: any, user?: any): Promise<any>;
+    save(el: any, user?: any): Promise<any>;
+    delete(el: any, user?: any): Promise<{
+        message: string;
+    }>;
+    deleteFrom(el: any, placeString: any, user?: any): Promise<void>;
+    afterDelete(id: any): void;
+    upload(file: any, id: any, place: any, key: any, progress?: any, user?: any): Promise<any>;
+    uploadDirectory(file: any, id: any, place?: string, key?: string, progress?: any, user?: any): Promise<any>;
+    pushChildren(el: any, placeString: any, user?: any): Promise<any>;
+    removeChildren(el: any, placeString: any, user?: any): Promise<any>;
+    rights(el: any, user?: any): {
+        isRoot: boolean;
+        isOwner: boolean;
+        isAnonymous: boolean;
+        isClient: any;
+        all(): {
+            read: boolean;
+            write: boolean;
+            isRoot: boolean;
+            isOwner: boolean;
+        };
+        read(): boolean;
+        write(): boolean;
+    };
+    rightsOfList(list: any, user: any): any;
+    getWaiter(id: string, user?: any): Promise<any>;
+    getFromController(id: string, user?: any): Promise<any>;
+    children(parentString: any, _filter?: object, _sort?: object, limit?: number, skip?: number, user?: any): any;
+    child(parentString: any, user?: any): void;
+    tabGet(placeString: any, user?: any): any;
+    parseUnit(u: any): any;
+    parsePlaceString(placeString: any): any;
+    find(finder?: object, sort?: object, limit?: number, skip?: number, user?: any): Promise<any>;
+    getType(id: any, user?: any): Promise<any>;
+    getOwner(id: any, user?: any): Promise<any>;
+    importType(type: any): Promise<void>;
+}

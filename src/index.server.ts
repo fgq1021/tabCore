@@ -145,10 +145,14 @@ export class TabServer extends Tab {
         await userConfig.fixChild(rootUser, "data.root", "Object", this.me);
         systemConfig.data.secret = this.genSecret(32);
         await systemConfig.save(this.me);
+        return this.writeSystemConfig();
+    }
+
+    async writeSystemConfig() {
         console.warn("初始化", "写入启动配置");
+        const systemConfig = await this.system.get(this.config._id)
         const systemConfigJson = await systemConfig.toJson({}, this.me);
         console.warn(systemConfigJson);
-        // console.warn(__dirname);
         console.warn("初始化", "写入位置：", this.configPath);
         await writeFile(this.configPath, JSON.stringify(systemConfigJson));
         return systemConfigJson;

@@ -34,6 +34,14 @@ export const defaultTypes = {
     },
     dataStructure: [
       {
+        ChineseName: "写入配置并关闭系统",
+        name: "writeSystemConfig",
+        dataType: "Function",
+        note: "",
+        default: "",
+        settings: {}
+      },
+      {
         ChineseName: "服务器模式",
         name: "server",
         dataType: "Boolean",

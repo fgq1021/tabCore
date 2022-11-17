@@ -1,8 +1,11 @@
 {
   "name": "tab-client",
-  "version": "0.0.3",
-  "main": "dist/index.client.js",
-  "types": "dist/index.client.d.ts",
+  "version": "1.0.1",
+  "main": "lib/index.client.js",
+  "module": "lib/tab.server.esm.js",
+  "browser": "lib/tab.client.umd.js",
+  "types": "lib/index.client.d.ts",
+  "type": "module",
   "dependencies": {
     "@alicloud/pop-core": "^1.7.10",
     "ali-oss": "^6.17.1",
@@ -14,15 +17,22 @@
     "sift": "^16.0.1",
     "socket.io-client": "^4.5.3",
     "spark-md5": "^3.0.2",
-    "taro-axios": "^1.1.1",
-    "vue": "^3.2.41"
+    "taro-axios": "^1.1.1"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^23.0.2",
+    "@rollup/plugin-json": "^5.0.1",
+    "@rollup/plugin-node-resolve": "^15.0.1",
+    "@rollup/plugin-typescript": "^9.0.2",
+    "rollup": "^3.3.0",
+    "ts-node": "^10.9.1",
+    "tslib": "^2.4.1",
     "typescript": "^4.8.4"
   },
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc -w"
+    "build": "tsc && rollup -c",
+    "dev": "tsc -w",
+    "buildUmd": "rollup -c"
   },
   "repository": {
     "type": "git",
@@ -30,6 +40,7 @@
   },
   "license": "MIT",
   "files": [
-    "dist"
+    "dist",
+    "lib"
   ]
 }
